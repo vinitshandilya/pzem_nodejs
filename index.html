@@ -1,0 +1,75 @@
+<h1>PZEM-004T</h1>
+<pre id="messages" style="height: 400px; overflow: scroll"></pre>
+<div id="id01"></div>
+
+<script>
+  (function() {
+    const messages = document.querySelector('#messages');
+
+    let ws;
+
+    function showReading(message) {
+      var reading = '';
+      try {
+        var jObj = JSON.parse(message);
+        console.log(jObj);
+        for (var key in jObj) {
+          if (jObj.hasOwnProperty(key)) {
+              var val = jObj[key];
+              console.log(val);
+              reading += `${key}: ${val}\n\n`
+          }
+        }
+      } catch(err) {
+        console.log(`Can't parse response from server: ${message}`);
+        messages.textContent = `${message}\n`;
+      }
+      messages.textContent = `\n\n${reading}`;
+    }
+
+    function init() {
+      if (ws) {
+        ws.onerror = ws.onopen = ws.onclose = null;
+        ws.close();
+      }
+
+      ws = new WebSocket('wss://pzem004t.herokuapp.com');
+      ws.onopen = () => {
+        console.log('Connection opened!');
+      }
+      ws.onmessage = ({ data }) => showReading(data);
+      ws.onclose = function() {
+        ws = null;
+      }
+    }
+
+    init();
+  })();
+  
+  
+  
+  
+  
+  var xmlhttp = new XMLHttpRequest();
+  var url = "https://pzem004t.herokuapp.com/getusagehistory";
+
+  xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          var myArr = JSON.parse(xmlhttp.responseText);
+		  console.log(myArr)
+          myFunction(myArr);
+      }
+  };
+  xmlhttp.open("GET", url, true);
+  xmlhttp.send();
+
+  function myFunction(arr) {
+      var out = "";
+      var i;
+      for(i = 0; i < arr.length; i++) {
+          out += arr[i].timestamp + ' - ' + arr[i].energyUsage + '<br>';
+      }
+      document.getElementById("id01").innerHTML = out;
+  }
+
+</script>
