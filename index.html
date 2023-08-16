@@ -33,7 +33,7 @@
         ws.close();
       }
 
-      ws = new WebSocket('wss://pzem004t.herokuapp.com');
+      ws = new WebSocket('wss://pzem-nodejs-app.onrender.com');
       ws.onopen = () => {
         console.log('Connection opened!');
       }
@@ -51,7 +51,7 @@
   
   
   var xmlhttp = new XMLHttpRequest();
-  var url = "https://pzem004t.herokuapp.com/getusagehistory";
+  var url = "https://pzem-nodejs-app.onrender.com/getusagehistory";
 
   xmlhttp.onreadystatechange = function() {
       if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
