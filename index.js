@@ -15,14 +15,14 @@ const schedule = require('node-schedule');
 // var previousUsage = 0;
 var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-// Connect to database //////////////////////////////////////////////////////////////
-mongoose.connect("mongodb+srv://pzem004t_user:pzem004t_pass@pzemcluster.sgig3.mongodb.net/pzem004t_db?retryWrites=true&w=majority")
-let connection = mongoose.connection;
-let collection;
-connection.on('error', console.error.bind(console, 'connection error:'));
-connection.once('open', async function () {
-  collection  = connection.db.collection("pzem004t_collection"); // initialize collection for future use
-});
+// // Connect to database //////////////////////////////////////////////////////////////
+// mongoose.connect("mongodb+srv://pzem004t_user:pzem004t_pass@pzemcluster.sgig3.mongodb.net/pzem004t_db?retryWrites=true&w=majority")
+// let connection = mongoose.connection;
+// let collection;
+// connection.on('error', console.error.bind(console, 'connection error:'));
+// connection.once('open', async function () {
+//   collection  = connection.db.collection("pzem004t_collection"); // initialize collection for future use
+// });
 
 // MQTT /////////////////////////////////////////////////////////////////////////////
 const mqtt = require('mqtt');
@@ -66,42 +66,42 @@ app.get('/',function(req,res){
   res.sendFile(path.join(__dirname+'/index.html'));
 });
 
-app.get('/getusagehistory', (req, res) => {
-  //collection.find().sort({ _id: -1 }).limit(7).toArray(function(err, data){ // get only last 7 usage history
-  collection.find().sort({ _id: -1 }).limit(43800).toArray(function(err, data){ // No. of minutes in a month
-    console.log(data); // it will print your collection data
-    res.send(data)
-  });
-
-})
+// app.get('/getusagehistory', (req, res) => {
+//   //collection.find().sort({ _id: -1 }).limit(7).toArray(function(err, data){ // get only last 7 usage history
+//   collection.find().sort({ _id: -1 }).limit(43800).toArray(function(err, data){ // No. of minutes in a month
+//     console.log(data); // it will print your collection data
+//     res.send(data)
+//   });
+//
+// })
 
 server.listen(PORT, () => {
   console.log(`Server started on port: ${PORT}`);
 });
 
-const job = schedule.scheduleJob('59 * * * * *', function(){ // update db every min
-  let ts = Date.now();
-  var myDate = new Date(ts).toLocaleDateString('en-US');
-  var myTime = new Date(ts).toLocaleTimeString('en-US');
-  console.log(myDate + " " + myTime);
-
-  try {
-    var obj = JSON.parse(msg)
-    let usage_till_today = parseFloat((obj.Energy).slice(0, -3));
-    // var today_usage = (usage_till_today - previousUsage).toFixed(3)
-    // previousUsage = usage_till_today
-    
-    //console.log(`today's usage ${today_usage} and previous day usage: ${previousUsage}`);
-    //console.log(day + " " + hours + ":" + minutes)
-    let reading = new Reading({
-      timestamp: myDate + " " + myTime,
-      //timestamp: date + " " + hours + ":" + minutes + ":" + seconds,
-      energyUsage: usage_till_today
-    })
-    collection.insertOne(reading);
-  } catch {
-    console.log('ignoring payload!')
-  }
-});
+// const job = schedule.scheduleJob('59 * * * * *', function(){ // update db every min
+//   let ts = Date.now();
+//   var myDate = new Date(ts).toLocaleDateString('en-US');
+//   var myTime = new Date(ts).toLocaleTimeString('en-US');
+//   console.log(myDate + " " + myTime);
+//
+//   try {
+//     var obj = JSON.parse(msg)
+//     let usage_till_today = parseFloat((obj.Energy).slice(0, -3));
+//     // var today_usage = (usage_till_today - previousUsage).toFixed(3)
+//     // previousUsage = usage_till_today
+//
+//     //console.log(`today's usage ${today_usage} and previous day usage: ${previousUsage}`);
+//     //console.log(day + " " + hours + ":" + minutes)
+//     let reading = new Reading({
+//       timestamp: myDate + " " + myTime,
+//       //timestamp: date + " " + hours + ":" + minutes + ":" + seconds,
+//       energyUsage: usage_till_today
+//     })
+//     collection.insertOne(reading);
+//   } catch {
+//     console.log('ignoring payload!')
+//   }
+// });
 
 
