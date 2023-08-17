@@ -14,6 +14,7 @@ const schedule = require('node-schedule');
 
 // var previousUsage = 0;
 var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+var snapshot = null;
 
 // // Connect to database //////////////////////////////////////////////////////////////
 // mongoose.connect("mongodb+srv://pzem004t_user:pzem004t_pass@pzemcluster.sgig3.mongodb.net/pzem004t_db?retryWrites=true&w=majority")
@@ -42,6 +43,7 @@ client.on('message', function (topic, message) {
   // message is Buffer
   //console.log(`Message arrived on ${topic}: ` + message.toString())
   msg = message.toString()
+  snapshot = msg;
   console.log(msg)
 })
 
@@ -55,7 +57,7 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(data) {
     wss.clients.forEach(function each(client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(data);
+          client.send(data);
       }
     })
   })
@@ -64,6 +66,10 @@ wss.on('connection', function connection(ws) {
 // Routes
 app.get('/',function(req,res){
   res.sendFile(path.join(__dirname+'/index.html'));
+});
+
+app.get('/reading',function(req,res){
+  res.status(200).json(snapshot);
 });
 
 // app.get('/getusagehistory', (req, res) => {
