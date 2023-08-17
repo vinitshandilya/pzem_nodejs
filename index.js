@@ -42,9 +42,9 @@ var msg = ""
 client.on('message', function (topic, message) {
   // message is Buffer
   //console.log(`Message arrived on ${topic}: ` + message.toString())
-  msg = message.toString()
-  snapshot = msg;
-  console.log(msg)
+	msg = message.toString();
+	snapshot = JSON.parse(msg);
+	console.log(snapshot);
 })
 
 // WebSocket /////////////////////////////////////////////////////////////////////////
