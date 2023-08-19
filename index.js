@@ -40,7 +40,7 @@ const wss = new WebSocket.Server({ server: server })
 wss.on('connection', function connection(ws) {
   console.log('websocket connection opened!')
   setInterval(function(){ // push mqtt data to browser every 500 ms.
-    ws.send(snapshot)
+    ws.send(JSON.stringify(snapshot))
   }, 500);
   ws.on('message', function incoming(data) {
     wss.clients.forEach(function each(client) {
