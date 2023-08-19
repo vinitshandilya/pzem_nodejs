@@ -18,8 +18,17 @@
               var val = jObj[key];
               console.log(val);
 			  if(key === "timestamp") {
+				  const options = { 
+				      year: 'numeric', 
+				      month: 'numeric', 
+				      day: 'numeric', 
+				      hour: 'numeric', 
+				      minute: 'numeric', 
+				      second: 'numeric', 
+				      timeZoneName: 'short' 
+				  };
 				  const timestampUTC = new Date(jObj.timestamp * 1000);
-				  const timestampLocal = timestampUTC.toLocaleString();
+				  const timestampLocal = timestampUTC.toLocaleString(undefined, options);
 				  reading += `${key}: ${timestampLocal}\n\n`
 			  }
 			  else {
