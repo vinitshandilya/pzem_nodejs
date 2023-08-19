@@ -10,23 +10,22 @@
 
     function showReading(message) {
       var reading = '';
+	  const options = { 
+	      year: 'numeric', 
+	      month: 'numeric', 
+	      day: 'numeric', 
+	      hour: 'numeric', 
+	      minute: 'numeric', 
+	      second: 'numeric', 
+	      timeZoneName: 'short' 
+	  };
       try {
         var jObj = JSON.parse(message);
         console.log(jObj);
         for (var key in jObj) {
           if (jObj.hasOwnProperty(key)) {
               var val = jObj[key];
-              console.log(val);
 			  if(key === "timestamp") {
-				  const options = { 
-				      year: 'numeric', 
-				      month: 'numeric', 
-				      day: 'numeric', 
-				      hour: 'numeric', 
-				      minute: 'numeric', 
-				      second: 'numeric', 
-				      timeZoneName: 'short' 
-				  };
 				  const timestampUTC = new Date(jObj.timestamp * 1000);
 				  const timestampLocal = timestampUTC.toLocaleString(undefined, options);
 				  reading += `${key}: ${timestampLocal}\n\n`
