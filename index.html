@@ -17,7 +17,7 @@
           if (jObj.hasOwnProperty(key)) {
               var val = jObj[key];
               console.log(val);
-			  if(key === timestamp) {
+			  if(key === "timestamp") {
 				  const timestampUTC = new Date(jObj.timestamp * 1000);
 				  const timestampLocal = timestampUTC.toLocaleString();
 				  reading += `${key}: ${timestampLocal}\n\n`
