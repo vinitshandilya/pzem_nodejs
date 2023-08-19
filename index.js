@@ -32,6 +32,9 @@ client.on('message', function (topic, message) {
   //console.log(`Message arrived on ${topic}: ` + message.toString())
 	msg = message.toString();
 	snapshot = JSON.parse(msg);
+	const currentDate = new Date();
+	const unixTimestamp = Math.floor(currentDate.getTime() / 1000);
+	snapshot.timestamp = unixTimestamp;
 	console.log(snapshot);
 })
 
