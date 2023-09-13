@@ -1,9 +1,10 @@
 <h1>PZEM-004T</h1>
-<p><a href="https://pzem-nodejs-app.onrender.com/reading" target="_blank">GET reading</a></p>
+<p><a href="/reading" target="_blank">GET reading</a></p>
 <pre id="messages" style="height: 400px; overflow: scroll"></pre>
 
 
 <script>
+
   (function() {
     const messages = document.querySelector('#messages');
 
@@ -43,19 +44,42 @@
       messages.textContent = `\n\n${reading}`;
     }
 
+    // Function to convert HTTP URL to WebSocket URL
+    function convertToWebSocketURL(httpURL) {
+      if (httpURL.startsWith("http://")) {
+        // Replace "http://" with "ws://"
+        return "ws://" + httpURL.slice(7);
+      } else if (httpURL.startsWith("https://")) {
+        // Replace "https://" with "wss://"
+        return "wss://" + httpURL.slice(8);
+      } else {
+        // Invalid URL format
+        console.error("Invalid URL format. Unable to convert to WebSocket URL.");
+        return null;
+      }
+    }
+
     function init() {
       if (ws) {
         ws.onerror = ws.onopen = ws.onclose = null;
         ws.close();
       }
 
-      ws = new WebSocket('wss://pzem-nodejs-app.onrender.com');
-      ws.onopen = () => {
-        console.log('Connection opened!');
-      }
-      ws.onmessage = ({ data }) => showReading(data);
-      ws.onclose = function() {
-        ws = null;
+      const currentURL = window.location.href;
+      const webSocketURL = convertToWebSocketURL(currentURL);
+
+      if (webSocketURL) {
+        console.log("WebSocket URL:", webSocketURL);
+        ws = new WebSocket(webSocketURL);
+        ws.onopen = () => {
+          console.log('Connection opened!');
+        }
+        ws.onmessage = ({ data }) => showReading(data);
+        ws.onclose = function() {
+          ws = null;
+        }
+      } else {
+        console.error("WebSocket URL conversion failed.");
       }
     }
 
